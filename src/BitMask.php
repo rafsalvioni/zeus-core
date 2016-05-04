@@ -104,7 +104,7 @@ class BitMask
      * 
      * @param int $mask
      */
-    public function __construct($mask)
+    public function __construct($mask = 0)
     {
         $this->mask = (int)$mask;
     }
