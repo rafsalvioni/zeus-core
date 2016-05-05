@@ -151,6 +151,7 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             !BitMask::isSingleFlag($flag > 2 ? $flag + 2 : 3)
             && BitMask::isSingleFlag($flag)
+            && !BitMask::isSingleFlag(0)
         );
     }
     

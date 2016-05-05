@@ -76,7 +76,7 @@ class BitMask
      */
     public static function isSingleFlag($flag)
     {
-        return ($flag & ($flag - 1)) === 0;
+        return $flag != 0 && ($flag & ($flag - 1)) === 0;
     }
     
     /**
