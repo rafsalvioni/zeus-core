@@ -49,7 +49,7 @@ class BitMask
      */
     public static function hasFlag($mask, $flag)
     {
-        return ($mask & $flag) === \min($mask, $flag);
+        return $flag != 0 && ($mask & $flag) === \min($mask, $flag);
     }
     
     /**

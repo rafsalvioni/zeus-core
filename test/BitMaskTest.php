@@ -104,15 +104,11 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
      */
     public function hasNotTest()
     {
-        $this->assertFalse($this->bitmask->without(72)->has(64));
-    }
-    
-    /**
-     * @test
-     */
-    public function hasNotTest2()
-    {
-        $this->assertFalse($this->bitmask->has(256));
+        $this->assertFalse(
+            $this->bitmask->without(72)->has(64)
+            || $this->bitmask->has(256)
+            || $this->bitmask->has(0)
+        );
     }
     
     /**
