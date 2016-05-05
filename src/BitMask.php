@@ -80,12 +80,12 @@ class BitMask
     }
     
     /**
-     * Returns a list that contains all flags defined on a mask.
+     * Returns a list that contains all single flags defined on a mask.
      * 
      * @param int $mask
      * @return int[]
      */
-    public static function getFlags($mask)
+    public static function maskToFlags($mask)
     {
         $flags = [];
         $flag  = 1;
@@ -110,10 +110,34 @@ class BitMask
     }
     
     /**
-     * Returns a new mask using current mask with $flags active.
+     * Adds a flag on this mask.
      * 
      * @param int $flag
      * @return self
+     */
+    public function add($flag)
+    {
+        $this->mask = self::addFlag($this->mask, $flag);
+        return $this;
+    }
+
+    /**
+     * Removes a flag from this mask.
+     * 
+     * @param int $flag
+     * @return self
+     */
+    public function remove($flag)
+    {
+        $this->mask = self::removeFlag($this->mask, $flag);
+        return $this;
+    }
+    
+    /**
+     * Returns a new mask using current mask with $flags active.
+     * 
+     * @param int $flag
+     * @return BitMask
      */
     public function with($flag)
     {
@@ -125,7 +149,7 @@ class BitMask
      * Returns a new mask using current mask without $flags.
      * 
      * @param int $flag
-     * @return self
+     * @return BitMask
      */
     public function without($flag)
     {
@@ -152,8 +176,21 @@ class BitMask
      */
     public function toogle($flag)
     {
-        $mask = self::toogleFlag($this->mask, $flag);
-        return new self($mask);
+        $this->mask = self::toogleFlag($this->mask, $flag);
+        return $this;
+    }
+    
+    /**
+     * Binds a value to this mask.
+     * 
+     * @param int $mask
+     * @return self
+     */
+    public function bind(&$mask)
+    {
+        $this->mask =& $mask;
+        $this->mask = (int)$this->mask;
+        return $this;
     }
 
     /**
