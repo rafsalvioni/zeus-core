@@ -31,7 +31,7 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     public function addTest()
     {
         $flags = 18;
-        $this->assertEquals($this->bitmask->with($flags)->getMask(), self::MASK + $flags);
+        $this->assertEquals($this->bitmask->add($flags)->getMask(), self::MASK + $flags);
     }
     
     /**
@@ -40,7 +40,25 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     public function addTest2()
     {
         $flags = 258;
-        $this->assertEquals($this->bitmask->with($flags)->getMask(), self::MASK + $flags);
+        $this->assertEquals($this->bitmask->add($flags)->getMask(), self::MASK + $flags);
+    }
+    
+    /**
+     * @test
+     */
+    public function withOutTest()
+    {
+        $ret1 = $this->bitmask->with(256);
+        $ret2 = $this->bitmask->without(256);
+        $this->assertTrue(
+            $ret1 instanceof BitMask
+            && $ret2 instanceof BitMask
+            && $ret1 !== $this->bitmask
+            && $ret2 !== $this->bitmask
+            && $ret2 !== $ret1
+            && $ret1->getMask() === self::MASK + 256
+            && $ret2->getMask() === self::MASK
+        );
     }
     
     /**
@@ -49,7 +67,7 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     public function removeTest()
     {
         $flags = 5;
-        $this->assertEquals($this->bitmask->without($flags)->getMask(), self::MASK - $flags);
+        $this->assertEquals($this->bitmask->remove($flags)->getMask(), self::MASK - $flags);
     }
     
     /**
@@ -57,7 +75,20 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
      */
     public function removeTest2()
     {
-        $this->assertEquals($this->bitmask->without(256)->getMask(), self::MASK);
+        $this->assertEquals($this->bitmask->remove(256)->getMask(), self::MASK);
+    }
+    
+    /**
+     * @test
+     */
+    public function muttableTest()
+    {
+        $this->assertTrue(
+            $this->bitmask->add(1024) === $this->bitmask
+            && $this->bitmask->getMask() == self::MASK + 1024
+            && $this->bitmask->remove(1024) === $this->bitmask
+            && $this->bitmask->getMask() == self::MASK
+        );
     }
     
     /**
@@ -95,6 +126,27 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function toogleTest2()
+    {
+        $this->assertTrue($this->bitmask->toogle(73) === $this->bitmask);
+    }
+    
+    /**
+     * @test
+     */
+    public function bindTest()
+    {
+        $binded = 128;
+        $this->bitmask->bind($binded);
+        $this->assertTrue(
+            $this->bitmask->add(64) === $this->bitmask
+            && $binded === 192
+        );
+    }
+    
+    /**
+     * @test
+     */
     public function compositeTest()
     {
         $flag = 1;
@@ -125,7 +177,7 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
         $flags  = \array_unique($flags);
         \sort($flags);
         
-        $flags2 = BitMask::getFlags($mask);
+        $flags2 = BitMask::maskToFlags($mask);
         
         $this->assertTrue($flags === $flags2);
     }
