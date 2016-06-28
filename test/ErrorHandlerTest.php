@@ -74,4 +74,37 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         @\trigger_error('Notice', \E_USER_NOTICE);
         $this->assertTrue($called); 
    }
+   
+   /**
+    * @test
+    * @depends stopTest
+    */
+   public function multipleStartTest()
+   {
+        $called = false;
+        \set_error_handler(function ($errno, $errmsg) use (&$called) {
+            $called = true;
+        });
+        
+        $n = \mt_rand(5, 15);
+        for ($i = 0; $i < $n; $i++) {
+            ErrorHandler::start();
+        }
+        
+        ErrorHandler::stop();
+        try {
+            @\trigger_error('Notice', \E_USER_NOTICE);
+            $this->assertFalse(true);
+        }
+        catch (\ErrorException $ex) {
+            $this->assertFalse($called);
+        }
+        
+        $n--;
+        for ($i = 0; $i < $n; $i++) {
+            ErrorHandler::stop();
+        }
+        @\trigger_error('Notice', \E_USER_NOTICE);
+        $this->assertTrue($called);
+   }
 }

@@ -10,11 +10,11 @@ namespace Zeus\Core;
 class ErrorHandler
 {
     /**
-     * Engine is started?
+     * Count opened instances
      * 
-     * @var bool
+     * @var int
      */
-    private static $started        = false;
+    private static $opened        = 0;
     /**
      * Consider use of error operator (@)?
      * 
@@ -38,9 +38,8 @@ class ErrorHandler
     public static function start(
         $useSuppress = false, $useErrorLevel = false, $errorTypes = \E_ALL
     ) {
-        if (!self::$started) {
-            self::$started = true;
-            $prev = \set_error_handler([__CLASS__, 'handle'], $errorTypes);
+        if (self::$opened++ == 0) {
+            \set_error_handler([__CLASS__, 'handle'], $errorTypes);
             self::$suppressErrors = (bool)$useSuppress;
             self::$errorReporting = (bool)$useErrorLevel;
         }
@@ -52,9 +51,8 @@ class ErrorHandler
      */
     public static function stop()
     {
-        if (self::$started) {
+        if (self::$opened > 0 && --self::$opened == 0) {
             \restore_error_handler();
-            self::$started = false;
         }
     }
     
@@ -71,7 +69,7 @@ class ErrorHandler
      */
     public static function handle($errno, $errstr, $errfile, $errline)
     {
-        if (self::$started) {
+        if (self::$opened > 0) {
             $errorReporting = \error_reporting();
             if ($errorReporting == 0) {
                 $throws = !self::$suppressErrors;
