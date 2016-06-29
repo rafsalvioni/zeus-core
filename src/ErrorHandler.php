@@ -14,19 +14,8 @@ class ErrorHandler
      * 
      * @var int
      */
-    private static $opened        = 0;
-    /**
-     * Consider use of error operator (@)?
-     * 
-     * @var bool
-     */
-    private static $suppressErrors = false;
-    /**
-     * Consider current error reporting level?
-     * 
-     * @var bool
-     */
-    private static $errorReporting = false;
+    private static $opened = 0;
+    private static $config = [];
 
     /**
      * Start the error's handler engine.
@@ -40,9 +29,8 @@ class ErrorHandler
     ) {
         if (self::$opened++ == 0) {
             \set_error_handler([__CLASS__, 'handle'], $errorTypes);
-            self::$suppressErrors = (bool)$useSuppress;
-            self::$errorReporting = (bool)$useErrorLevel;
         }
+        self::$config[] = [(bool)$useSuppress, (bool)$useErrorLevel];
     }
     
     /**
@@ -51,8 +39,12 @@ class ErrorHandler
      */
     public static function stop()
     {
-        if (self::$opened > 0 && --self::$opened == 0) {
-            \restore_error_handler();
+        if (self::$opened > 0) {
+            \array_pop(self::$config);
+            
+            if (--self::$opened == 0) {
+                \restore_error_handler();
+            }
         }
     }
     
@@ -70,13 +62,16 @@ class ErrorHandler
     public static function handle($errno, $errstr, $errfile, $errline)
     {
         if (self::$opened > 0) {
+            $config         =& self::$config[self::$opened - 1];
             $errorReporting = \error_reporting();
+            
             if ($errorReporting == 0) {
-                $throws = !self::$suppressErrors;
+                $throws = !$config[0];
             }
             else {
-                $throws = !self::$errorReporting || ($errorReporting & $errno) > 0;
+                $throws = !$config[1] || ($errorReporting & $errno) > 0;
             }
+            
             if ($throws) {
                 self::stop();
                 throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);

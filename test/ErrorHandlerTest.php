@@ -100,7 +100,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
             $this->assertFalse($called);
         }
         
-        $n--;
+        $n -= 2;
         for ($i = 0; $i < $n; $i++) {
             ErrorHandler::stop();
         }
