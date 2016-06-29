@@ -15,6 +15,11 @@ class ErrorHandler
      * @var int
      */
     private static $opened = 0;
+    /**
+     * Stores the instances' config
+     * 
+     * @var array
+     */
     private static $config = [];
 
     /**
