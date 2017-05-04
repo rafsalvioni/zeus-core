@@ -1,9 +1,4 @@
 <?php
-/**
- * Class BitMask
- *
- * @author Rafael M. Salvioni
- */
 
 namespace Zeus\Core;
 
