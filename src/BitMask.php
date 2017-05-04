@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class BitMask
+ *
+ * @author Rafael M. Salvioni
+ */
 
 namespace Zeus\Core;
 
@@ -15,29 +20,35 @@ class BitMask
      * @var int
      */
     private $mask;
-    
+
     /**
-     * Add a flag to a mask.
+     * Add one or more flags on a mask.
      * 
      * @param int $mask
      * @param int $flag
      * @return int
      */
-    public static function addFlag(int $mask, int $flag): int
+    public static function addFlag(int $mask, int ...$flag): int
     {
-        return ($mask | $flag);
+        foreach ($flag as &$f) {
+            $mask = ($mask | $f);
+        }
+        return $mask;
     }
     
     /**
-     * Remove a flag from a mask.
+     * Remove one or more flags from a mask.
      * 
      * @param int $mask
      * @param int $flag
      * @return int
      */
-    public static function removeFlag(int $mask, int $flag): int
+    public static function removeFlag(int $mask, int ...$flag): int
     {
-        return ($mask & ~$flag);
+        foreach ($flag as &$f) {
+            $mask = ($mask & ~$f);
+        }
+        return $mask;
     }
     
     /**
@@ -189,7 +200,6 @@ class BitMask
     public function bind(int &$mask): self
     {
         $this->mask =& $mask;
-        $this->mask = (int)$this->mask;
         return $this;
     }
 
