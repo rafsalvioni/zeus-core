@@ -7,80 +7,78 @@ namespace Zeus\Core;
  *
  * @author Rafael M. Salvioni
  */
-class ErrorHandler
+abstract class ErrorHandler
 {
     /**
-     * Count opened instances
-     * 
-     * @var int
-     */
-    private static $opened = 0;
-    /**
-     * Stores the instances' config
+     * Stack of started handlers
      * 
      * @var array
      */
-    private static $config = [];
-
-    /**
-     * Start the error's handler engine.
-     * 
-     * @param bool $useSuppress Consider use of error operator?
-     * @param bool $useErrorLevel Consider current error reporting level?
-     * @param bool $errorTypes Custom error types to consider
-     */
-    public static function start(
-        $useSuppress = false, $useErrorLevel = false, $errorTypes = \E_ALL
-    ) {
-        if (self::$opened++ == 0) {
-            \set_error_handler([__CLASS__, 'handle'], $errorTypes);
-        }
-        self::$config[] = [(bool)$useSuppress, (bool)$useErrorLevel];
-    }
+    private static $stack = [];
     
     /**
-     * Stop handler engine.
+     * Checks if the ErrorHandler is started.
      * 
+     * @return bool
      */
-    public static function stop()
+    public static function isStarted()
     {
-        if (self::$opened > 0) {
-            \array_pop(self::$config);
-            
-            if (--self::$opened == 0) {
-                \restore_error_handler();
+        return !empty(static::$stack);
+    }
+    
+    /**
+     * Starting the ErrorHandler.
+     * 
+     * @param int $level
+     */
+    public static function start($level = \E_ALL)
+    {
+        static::$stack[] = null;
+        \set_error_handler([__CLASS__, 'handle'], $level);
+    }
+    
+    /**
+     * Stop the current ErrorHandler.
+     * 
+     * @param bool $throw Throws a eventual exception?
+     * @return \ErrorException
+     */
+    public static function stop($throw = true)
+    {
+        if (static::isStarted()) {
+            $exception = \array_pop(static::$stack);
+            \restore_error_handler();
+
+            if (($exception instanceof \ErrorException) && $throw) {
+                throw $exception;
             }
+            return $exception;
+        }
+        return null;
+    }
+    
+    /**
+     * Stop all handlers.
+     * 
+     */
+    public static function clean()
+    {
+        while (!empty(static::$stack)) {
+            static::stop(false);
         }
     }
     
     /**
-     * Error's handler.
-     * 
-     * If a exceptions was fired, the engine will be stopped automatically.
+     * Error handler callback.
      * 
      * @param int $errno
      * @param string $errstr
      * @param string $errfile
      * @param int $errline
-     * @throws \ErrorException
      */
     public static function handle($errno, $errstr, $errfile, $errline)
     {
-        if (self::$opened > 0) {
-            $config         =& self::$config[self::$opened - 1];
-            $errorReporting = \error_reporting();
-            
-            if ($errorReporting == 0) {
-                $throws = !$config[0];
-            }
-            else {
-                $throws = !$config[1] || ($errorReporting & $errno) > 0;
-            }
-            
-            if ($throws) {
-                self::stop();
-                throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-            }
-        }
+        $stack =& static::$stack[\count(static::$stack) - 1];
+        $stack = new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 }
