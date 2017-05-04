@@ -23,7 +23,7 @@ class BitMask
      * @param int $flag
      * @return int
      */
-    public static function addFlag($mask, $flag)
+    public static function addFlag(int $mask, int $flag): int
     {
         return ($mask | $flag);
     }
@@ -35,7 +35,7 @@ class BitMask
      * @param int $flag
      * @return int
      */
-    public static function removeFlag($mask, $flag)
+    public static function removeFlag(int $mask, int $flag): int
     {
         return ($mask & ~$flag);
     }
@@ -47,9 +47,9 @@ class BitMask
      * @param int $flag
      * @return bool
      */
-    public static function hasFlag($mask, $flag)
+    public static function hasFlag(int $mask, int $flag): bool
     {
-        return $flag != 0 && ($mask & $flag) === \min($mask, $flag);
+        return ($mask & $flag) != 0;
     }
     
     /**
@@ -59,7 +59,7 @@ class BitMask
      * @param int $flag
      * @return int
      */
-    public static function toogleFlag($mask, $flag)
+    public static function toogleFlag(int $mask, int $flag): int
     {
         return self::hasFlag($mask, $flag) ?
                self::removeFlag($mask, $flag) :
@@ -74,7 +74,7 @@ class BitMask
      * @param int $flag
      * @return bool
      */
-    public static function isSingleFlag($flag)
+    public static function isSingleFlag(int $flag): bool
     {
         return $flag != 0 && ($flag & ($flag - 1)) === 0;
     }
@@ -85,7 +85,7 @@ class BitMask
      * @param int $mask
      * @return int[]
      */
-    public static function maskToFlags($mask)
+    public static function maskToFlags(int $mask): array
     {
         $flags = [];
         $flag  = 1;
@@ -115,7 +115,7 @@ class BitMask
      * @param int $flag
      * @return self
      */
-    public function add($flag)
+    public function add(int $flag): self
     {
         $this->mask = self::addFlag($this->mask, $flag);
         return $this;
@@ -127,7 +127,7 @@ class BitMask
      * @param int $flag
      * @return self
      */
-    public function remove($flag)
+    public function remove(int $flag): self
     {
         $this->mask = self::removeFlag($this->mask, $flag);
         return $this;
@@ -139,7 +139,7 @@ class BitMask
      * @param int $flag
      * @return BitMask
      */
-    public function with($flag)
+    public function with(int $flag): BitMask
     {
         $mask = self::addFlag($this->mask, $flag);
         return new self($mask);
@@ -151,7 +151,7 @@ class BitMask
      * @param int $flag
      * @return BitMask
      */
-    public function without($flag)
+    public function without(int $flag): BitMask
     {
         $mask = self::removeFlag($this->mask, $flag);
         return new self($mask);
@@ -163,7 +163,7 @@ class BitMask
      * @param int $flag
      * @return bool
      */
-    public function has($flag)
+    public function has(int $flag): bool
     {
         return self::hasFlag($this->mask, $flag);
     }
@@ -174,7 +174,7 @@ class BitMask
      * @param int $flag
      * @return self
      */
-    public function toogle($flag)
+    public function toogle(int $flag): self
     {
         $this->mask = self::toogleFlag($this->mask, $flag);
         return $this;
@@ -186,7 +186,7 @@ class BitMask
      * @param int $mask
      * @return self
      */
-    public function bind(&$mask)
+    public function bind(int &$mask): self
     {
         $this->mask =& $mask;
         $this->mask = (int)$this->mask;
@@ -198,7 +198,7 @@ class BitMask
      * 
      * @return int
      */
-    public function getMask()
+    public function getMask(): int
     {
         return $this->mask;
     }
