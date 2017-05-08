@@ -5,11 +5,13 @@ namespace Zeus\Core;
 /**
  * Trait to be used in objects that implements \ArrayAccess interface.
  * 
- * Its provides access to \ArrayAccess methods implementing magic methods.
+ * Its provides access to \ArrayAccess methods using __set, __get, __isset
+ * and __unset magic methods.
  *
+ * @see http://php.net/manual/en/language.oop5.overloading.php
  * @author Rafael M. Salvioni
  */
-trait ObjectToArrayTrait
+trait ArrayToObjectAccessTrait
 {
     /**
      * 
@@ -28,7 +30,8 @@ trait ObjectToArrayTrait
      */
     public function __isset(string $var): bool
     {
-        return $this->offsetExists($var);
+        return $this->offsetExists($var)
+                && $this->offsetGet($var) != null;
     }
 
     /**
