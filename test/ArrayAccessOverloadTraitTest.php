@@ -6,14 +6,14 @@ namespace ZeusTest\Core;
  * 
  * @author Rafael M. Salvioni
  */
-class ArrayToObjectAccessTraitTest extends \PHPUnit_Framework_TestCase
+class ArrayAccessOverloadTraitTest extends \PHPUnit_Framework_TestCase
 {
     private $object;
     
     public function setUp()
     {
         $this->object = new class implements \ArrayAccess {
-            use \Zeus\Core\ArrayToObjectAccessTrait;
+            use \Zeus\Core\ArrayAccessOverloadTrait;
             
             public function offsetExists($offset): bool {
                 return true;

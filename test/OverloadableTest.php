@@ -13,7 +13,7 @@ class OverloadableTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->object = new class implements \Zeus\Core\Overloadable, \ArrayAccess {
-            use \Zeus\Core\ArrayToObjectAccessTrait;
+            use \Zeus\Core\ArrayAccessOverloadTrait;
             
             public function offsetExists($offset): bool {
                 return true;

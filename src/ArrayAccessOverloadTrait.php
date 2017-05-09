@@ -11,7 +11,7 @@ namespace Zeus\Core;
  * @see http://php.net/manual/en/language.oop5.overloading.php
  * @author Rafael M. Salvioni
  */
-trait ArrayToObjectAccessTrait
+trait ArrayAccessOverloadTrait
 {
     /**
      * 
