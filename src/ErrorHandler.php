@@ -58,6 +58,20 @@ abstract class ErrorHandler
     }
     
     /**
+     * Starts the ErrorHandler, call the callable given and stops.
+     * 
+     * @param callable $callback
+     * @param int $level
+     * @throw \ErrorException
+     */
+    public static function tryThis(callable $callback, $level = \E_ALL)
+    {
+        self::start($level);
+        \call_user_func($callback);
+        self::stop(true);
+    }
+    
+    /**
      * Stop all handlers.
      * 
      */
