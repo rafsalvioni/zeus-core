@@ -112,24 +112,28 @@ class BitMask
     /**
      * Adds a flag on this mask.
      * 
-     * @param int $flag
+     * @param int $flags
      * @return self
      */
-    public function add($flag)
+    public function add(...$flags)
     {
-        $this->mask = self::addFlag($this->mask, $flag);
+        foreach ($flags as &$flag) {
+            $this->mask = self::addFlag($this->mask, $flag);
+        }
         return $this;
     }
 
     /**
      * Removes a flag from this mask.
      * 
-     * @param int $flag
+     * @param int $flags
      * @return self
      */
-    public function remove($flag)
+    public function remove(...$flags)
     {
-        $this->mask = self::removeFlag($this->mask, $flag);
+        foreach ($flags as &$flag) {
+            $this->mask = self::removeFlag($this->mask, $flag);
+        }
         return $this;
     }
     

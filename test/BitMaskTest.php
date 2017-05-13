@@ -46,6 +46,17 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function addRemoveVarParamTest()
+    {
+        $mask = new BitMask;
+        $flags = [2, 4, 8];
+        $this->assertEquals($mask->add(...$flags)->getMask(), 14);
+        $this->assertEquals($mask->remove(...$flags)->getMask(), 0);
+    }
+    
+    /**
+     * @test
+     */
     public function withOutTest()
     {
         $ret1 = $this->bitmask->with(256);
