@@ -52,6 +52,8 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
         $flags = [2, 4, 8];
         $this->assertEquals($mask->add(...$flags)->getMask(), 14);
         $this->assertEquals($mask->remove(...$flags)->getMask(), 0);
+        $this->assertEquals(BitMask::addFlag(0, ...$flags), 14);
+        $this->assertEquals(BitMask::removeFlag(14, ...$flags), 0);
     }
     
     /**
