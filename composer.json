@@ -3,8 +3,7 @@
     "description": "Uncategorized helper classes, interfaces and traits",
     "license": "BSD-3-Clause",
     "keywords": [
-        "bitmask",
-        "zeus"
+        "bitmask", "zeus", "errorexception", "errorhandler"
     ],
     "homepage": "https://github.com/rafsalvioni/zeus-core",
     "autoload": {
