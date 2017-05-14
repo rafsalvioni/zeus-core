@@ -60,15 +60,19 @@ abstract class ErrorHandler
     /**
      * Starts the ErrorHandler, call the callable given and stops.
      * 
+     * Returns the callable's return.
+     * 
      * @param callable $callback
      * @param int $level
      * @throw \ErrorException
+     * @return mixed
      */
     public static function tryThis(callable $callback, $level = \E_ALL)
     {
         self::start($level);
-        \call_user_func($callback);
+        $return = \call_user_func($callback);
         self::stop(true);
+        return $return;
     }
     
     /**

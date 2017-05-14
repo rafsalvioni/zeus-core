@@ -80,6 +80,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $callback = function()
         {
             \trigger_error("UserError", \E_USER_WARNING);
+            return 666;
         };
         
         try {
@@ -91,8 +92,8 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         }
         
         try {
-            ErrorHandler::tryThis($callback, \E_USER_NOTICE);
-            $this->assertTrue(true);
+            $r = ErrorHandler::tryThis($callback, \E_USER_NOTICE);
+            $this->assertTrue($r == 666);
         }
         catch (\ErrorException $ex) {
             $this->assertTrue(false);
