@@ -23,9 +23,12 @@ class BitMask
      * @param int $flag
      * @return int
      */
-    public static function addFlag($mask, $flag)
+    public static function addFlag($mask, ...$flag)
     {
-        return ($mask | $flag);
+        foreach ($flag as &$f) {
+            $mask = ($mask | $f);
+        }
+        return $mask;
     }
     
     /**
@@ -35,9 +38,12 @@ class BitMask
      * @param int $flag
      * @return int
      */
-    public static function removeFlag($mask, $flag)
+    public static function removeFlag($mask, ...$flag)
     {
-        return ($mask & ~$flag);
+        foreach ($flag as &$f) {
+            $mask = ($mask & ~$f);
+        }
+        return $mask;
     }
     
     /**
@@ -115,9 +121,9 @@ class BitMask
      * @param int $flag
      * @return self
      */
-    public function add($flag)
+    public function add(...$flag)
     {
-        $this->mask = self::addFlag($this->mask, $flag);
+        $this->mask = self::addFlag($this->mask, ...$flag);
         return $this;
     }
 
@@ -127,9 +133,9 @@ class BitMask
      * @param int $flag
      * @return self
      */
-    public function remove($flag)
+    public function remove(...$flag)
     {
-        $this->mask = self::removeFlag($this->mask, $flag);
+        $this->mask = self::removeFlag($this->mask, ...$flag);
         return $this;
     }
     
@@ -139,9 +145,9 @@ class BitMask
      * @param int $flag
      * @return BitMask
      */
-    public function with($flag)
+    public function with(...$flag)
     {
-        $mask = self::addFlag($this->mask, $flag);
+        $mask = self::addFlag($this->mask, ...$flag);
         return new self($mask);
     }
     
@@ -151,9 +157,9 @@ class BitMask
      * @param int $flag
      * @return BitMask
      */
-    public function without($flag)
+    public function without(...$flag)
     {
-        $mask = self::removeFlag($this->mask, $flag);
+        $mask = self::removeFlag($this->mask, ...$flag);
         return new self($mask);
     }
     

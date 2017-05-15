@@ -36,6 +36,7 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @test
+     * @depends addTest
      */
     public function addTest2()
     {
@@ -45,18 +46,35 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @test
+     * @depends addTest2
+     */
+    public function addVaryFlags()
+    {
+        $flags = [2,15,32,127,512];
+        $bit   = clone $this->bitmask;
+        $bit->add(...$flags);
+        $mask  = BitMask::addFlag(self::MASK, ...$flags);
+        
+        while ($flags) {
+            $this->bitmask->add(\array_shift($flags));
+        }
+        $this->assertTrue($bit->getMask() === $this->bitmask->getMask() && $bit->getMask() === $mask);
+    }
+    
+    /**
+     * @test
      */
     public function withOutTest()
     {
-        $ret1 = $this->bitmask->with(256);
-        $ret2 = $this->bitmask->without(256);
+        $ret1 = $this->bitmask->with(256, 512);
+        $ret2 = $this->bitmask->without(256, 512);
         $this->assertTrue(
             $ret1 instanceof BitMask
             && $ret2 instanceof BitMask
             && $ret1 !== $this->bitmask
             && $ret2 !== $this->bitmask
             && $ret2 !== $ret1
-            && $ret1->getMask() === self::MASK + 256
+            && $ret1->getMask() === self::MASK + 768
             && $ret2->getMask() === self::MASK
         );
     }
@@ -72,10 +90,28 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @test
+     * @depends removeTest
      */
     public function removeTest2()
     {
         $this->assertEquals($this->bitmask->remove(256)->getMask(), self::MASK);
+    }
+    
+    /**
+     * @test
+     * @depends removeTest2
+     */
+    public function removeVaryFlags()
+    {
+        $flags = [2,15,32,127,512];
+        $bit   = clone $this->bitmask;
+        $bit->remove(...$flags);
+        $mask  = BitMask::removeFlag(self::MASK, ...$flags);
+        
+        while ($flags) {
+            $this->bitmask->remove(\array_shift($flags));
+        }
+        $this->assertTrue($bit->getMask() === $this->bitmask->getMask() && $bit->getMask() === $mask);
     }
     
     /**

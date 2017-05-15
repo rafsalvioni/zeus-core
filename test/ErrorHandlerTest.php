@@ -40,6 +40,32 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
      * @test
      * @depends startStopTest
      */
+    public function tryThisTest()
+    {
+        $f = function() {
+            trigger_error("UserError", \E_USER_WARNING);
+            return 666;
+        };
+        try {
+            ErrorHandler::tryThis($f);
+            $this->assertTrue(false);
+        }
+        catch (\Exception $ex) {
+            $this->assertEquals("UserError", $ex->getMessage());
+        }
+        try {
+            ErrorHandler::tryThis($f, \E_USER_NOTICE);
+            $this->assertTrue(true);
+        }
+        catch (\Exception $ex) {
+            $this->assertTrue(false);
+        }
+    }
+    
+    /**
+     * @test
+     * @depends startStopTest
+     */
     public function startedTest()
     {
         ErrorHandler::start();
