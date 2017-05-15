@@ -205,8 +205,8 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
             $power   = \mt_rand(0, 10);
             $flag    = \pow(2, $power);
             $flags[] = $flag;
-            $mask    = BitMask::addFlag($mask, $flag);
         }
+        $mask   = BitMask::addFlag($mask, ...$flags);
         $flags  = \array_unique($flags);
         \sort($flags);
         

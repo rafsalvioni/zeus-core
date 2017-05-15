@@ -3,12 +3,17 @@
     "description": "Uncategorized helper classes, interfaces and traits",
     "license": "BSD-3-Clause",
     "keywords": [
-        "bitmask", "error", "handler", "zeus"
+        "bitmask", "error", "handler", "zeus", "options"
     ],
     "homepage": "https://github.com/rafsalvioni/zeus-core",
     "autoload": {
         "psr-4": {
             "Zeus\\Core\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZeusTest\\Core\\": "test/"
         }
     },
     "require": {
