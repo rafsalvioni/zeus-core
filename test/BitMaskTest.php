@@ -146,6 +146,9 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
     public function hasTest()
     {
         $this->assertTrue($this->bitmask->has(132));
+        $this->assertFalse($this->bitmask->has(0));
+        $this->assertFalse(BitMask::hasFlag(0, 2));
+        $this->assertFalse(BitMask::hasFlag(2, 0));
     }
     
     /**
